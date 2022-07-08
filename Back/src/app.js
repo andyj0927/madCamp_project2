@@ -1,9 +1,7 @@
 const express = require('express')
-const path = require('path')
-
 const router = require('./router')
+const session = require('express-session')
 const { sequelize } = require('./lib/database/models')
-
 
 sequelize.sync({force: false})
 	.then(() => {
@@ -16,7 +14,11 @@ const app = express()
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
-app.use('/', router);
-
+app.use('/', router)
+app.use(session({
+	secret: '!@#$%^&*()1234567890',
+	resave: false,
+	saveUninitialized: true,
+}))
 
 module.exports = app
