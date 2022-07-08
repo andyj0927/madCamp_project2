@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.madcamp.project2.Auth.LoginActivity
 import com.madcamp.project2.Auth.RegisterActivity
+import com.madcamp.project2.Data.User
 import com.madcamp.project2.Data.UserResponse
 import com.madcamp.project2.Global
 import com.madcamp.project2.Home.MainActivity
@@ -32,7 +33,6 @@ class TopFragment: Fragment() {
 
         initViews(view)
         initListeners()
-        Global.getCurrentUser(this.requireContext())
         setTopButtons()
 
         return view
@@ -58,31 +58,35 @@ class TopFragment: Fragment() {
         logoutButton.setOnClickListener {
             val intent = Intent(activity, MainActivity::class.java)
             startActivity(intent)
-            val call: Call<UserResponse> =
-                ServiceCreator.userService.getLogout("application/json")
+            val call: Call<UserResponse<Unit>> =
+                ServiceCreator.userService.getLogout()
 
-            call.enqueue(object : Callback<UserResponse> {
+            call.enqueue(object : Callback<UserResponse<Unit>> {
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UserResponse<Unit>>,
+                    response: Response<UserResponse<Unit>>
                 ) {
                     if (response.code() == 200) {
-                        Global.currentUser = response.body()?.data
+                        Global.currentUser = null
+                        setTopButtons()
 
+                        Log.d("currentUser", Global.currentUser.toString())
                         Toast.makeText(
                             activity,
-                            "로그아웃",
+                            "Logout Success",
                             Toast.LENGTH_LONG
                         ).show()
                         startActivity(Intent(activity, LoginActivity::class.java))
                     }
+                    else if (response.code() == 403) {
+                        Toast.makeText(activity, "Need to Login", Toast.LENGTH_LONG).show()
+                    }
                     else {
-                        val data: String? = response.body()?.toString()
-                        Toast.makeText(activity, data, Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "${response.code()}", Toast.LENGTH_LONG).show()
                     }
                 }
 
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                override fun onFailure(call: Call<UserResponse<Unit>>, t: Throwable) {
                     Log.e("NetworkTest", "error:$t")
                 }
             })

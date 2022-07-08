@@ -6,20 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".Home.MainActivity">
 
-    <RelativeLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/top_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.madcamp.project2.Fragment.TopFragment"
+        tools:layout="@layout/fragment_top"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <RelativeLayout
+        android:id="@+id/mainRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/top_fragment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
         >
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/top_fragment"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:name="com.madcamp.project2.Fragment.TopFragment"
-            tools:layout="@layout/fragment_top"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="로그인 후 페이지"
+            android:gravity="center"
+
             />
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/testTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="로그인 전 페이지"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/top_fragment"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

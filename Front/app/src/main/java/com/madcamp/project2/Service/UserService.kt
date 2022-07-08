@@ -5,30 +5,23 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface UserService {
-    @GET("/auth/user-list/get")
-    fun getUserList(
-        @Header("Content-Type") content_type: String
-    ): Call<UserListResponse>
+    @Headers("Content-Type: application/json")
+    @GET("auth/user-list/get")
+    fun getUserList(): Call<UserResponse<ArrayList<User>>>
 
-    @GET("auth/user/get")
-    fun getCurrentUser(
-        @Header("Content-Type") content_type: String
-    ): Call<UserResponse>
-
+    @Headers("Content-Type: application/json")
     @POST("auth/register")
     fun postRegister(
-        @Header("Content-Type") content_type: String,
         @Body body: UserRegisterRequest
-    ): Call<UserResponse>
+    ): Call<UserResponse<User>>
 
+    @Headers("Content-Type: application/json")
     @POST("auth/login")
     fun postLogin(
-        @Header("Content-Type") content_type: String,
         @Body body: UserLoginRequest
-    ): Call<UserResponse>
+    ): Call<UserResponse<User>>
 
+    @Headers("Content-Type: text/html")
     @GET("auth/logout")
-    fun getLogout(
-        @Header("Content-Type") content_type: String
-    ): Call<UserResponse>
+    fun getLogout(): Call<UserResponse<Unit>>
 }

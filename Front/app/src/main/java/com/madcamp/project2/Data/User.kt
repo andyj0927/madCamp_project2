@@ -16,19 +16,12 @@ data class User (
     val updatedAt: Date
 )
 
-data class UserResponse(
+data class UserResponse<T>(
     val status: Int,
     val success: Boolean,
     val message: String,
-    val data: User?
+    val data: T?
     )
-
-data class UserListResponse(
-    val status: Int,
-    val success: Boolean,
-    val message: String,
-    val data: ArrayList<User>?
-)
 
 data class UserRegisterRequest(
     val userName: String,
@@ -39,10 +32,4 @@ data class UserRegisterRequest(
 data class UserLoginRequest(
     val userName: String,
     val password: String
-    )
-
-data class UserLogoutResponse (
-    val status: Int,
-    val success: Boolean,
-    val message: String
     )
