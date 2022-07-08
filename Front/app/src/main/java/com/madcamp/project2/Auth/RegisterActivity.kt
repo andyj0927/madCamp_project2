@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.madcamp.project2.Data.User
 import com.madcamp.project2.Data.UserRegisterRequest
 import com.madcamp.project2.Data.UserResponse
 import com.madcamp.project2.R
@@ -44,13 +45,13 @@ class RegisterActivity : AppCompatActivity() {
 
             val newUser = UserRegisterRequest(userName, displayName, password)
 
-            val call: Call<UserResponse> =
-                ServiceCreator.userService.postRegister("application/json", newUser)
+            val call: Call<UserResponse<User>> =
+                ServiceCreator.userService.postRegister(newUser)
 
-            call.enqueue(object : Callback<UserResponse> {
+            call.enqueue(object : Callback<UserResponse<User>> {
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UserResponse<User>>,
+                    response: Response<UserResponse<User>>
                 ) {
                     if (response.code() == 200) {
                         val data = response.body()?.data
@@ -74,7 +75,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                override fun onFailure(call: Call<UserResponse<User>>, t: Throwable) {
                     Log.e("NetworkTest", "error:$t")
                 }
             })

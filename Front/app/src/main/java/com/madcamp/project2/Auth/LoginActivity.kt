@@ -7,8 +7,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.madcamp.project2.Data.User
 import com.madcamp.project2.Data.UserLoginRequest
 import com.madcamp.project2.Data.UserResponse
+import com.madcamp.project2.Global
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.ServiceCreator
@@ -29,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
         initListeners()
     }
 
-
     private fun initViews() {
         editTextId = findViewById(R.id.loginId)
         editTextPassword = findViewById(R.id.loginPW)
@@ -44,17 +45,17 @@ class LoginActivity : AppCompatActivity() {
 
             val user = UserLoginRequest(userName, password)
 
-            val call: Call<UserResponse> =
-                ServiceCreator.userService.postLogin("application/json", user)
+            val call: Call<UserResponse<User>> =
+                ServiceCreator.userService.postLogin(user)
 
-            call.enqueue(object : Callback<UserResponse> {
+            call.enqueue(object : Callback<UserResponse<User>> {
                 override fun onResponse(
-                    call: Call<UserResponse>,
-                    response: Response<UserResponse>
+                    call: Call<UserResponse<User>>,
+                    response: Response<UserResponse<User>>
                 ) {
                     if (response.code() == 200) {
                         val data = response.body()?.data
-
+                        Global.currentUser = data
                         Toast.makeText(
                             this@LoginActivity,
                             "${data?.userName}님 반갑습니다!",
@@ -71,7 +72,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<UserResponse>, t: Throwable) {
+                override fun onFailure(call: Call<UserResponse<User>>, t: Throwable) {
                     Log.e("NetworkTest", "error:$t")
                 }
             })
