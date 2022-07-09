@@ -5,19 +5,41 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface UserService {
-    @GET("auth/user-list/get")
-    fun getUserList(): Call<UserResponse<ArrayList<User>>>
+    @GET("auth/user-list")
+    fun getUserList(
+        @HeaderMap headers: Map<String, String>
+    ): Call<ResponseType<ArrayList<User>>>
 
     @POST("auth/register")
     fun postRegister(
         @Body body: UserRegisterRequest
-    ): Call<UserResponse<User>>
+    ): Call<ResponseType<User>>
 
     @POST("auth/login")
     fun postLogin(
         @Body body: UserLoginRequest
-    ): Call<UserResponse<User>>
+    ): Call<ResponseType<User>>
 
     @GET("auth/logout")
-    fun getLogout(): Call<UserResponse<Unit>>
+    fun getLogout(
+        @HeaderMap headers: Map<String, String>
+    ): Call<ResponseType<Unit>>
+
+    @GET("auth/Info/{userId}")
+    fun getUserInfo(
+        @HeaderMap headers: Map<String, String>,
+        @Path("userId") userId: Int
+    ): Call<ResponseType<User>>
+
+    @POST("auth/google/login")
+    fun getGoogleLogin(
+        @HeaderMap headers: Map<String, String>,
+        @Body body: String
+    ): Call<ResponseType<User>>
+
+    @POST("auth/google/interlock")
+    fun interlockGoogle(
+        @HeaderMap headers: Map<String, String>,
+        @Body body: String
+    ): Call<ResponseType<User>>
 }

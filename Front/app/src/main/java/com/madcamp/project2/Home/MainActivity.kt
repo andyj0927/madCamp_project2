@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
-import com.madcamp.project2.Data.UserResponse
 import com.madcamp.project2.Global
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.ServiceCreator
@@ -36,13 +36,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getUserList() {
-        val call: Call<UserResponse<ArrayList<User>>> =
-            ServiceCreator.userService.getUserList()
+        val call: Call<ResponseType<ArrayList<User>>> =
+            ServiceCreator.userService.getUserList(Global.headers)
 
-        call.enqueue(object : Callback<UserResponse<ArrayList<User>>> {
+        call.enqueue(object : Callback<ResponseType<ArrayList<User>>> {
             override fun onResponse(
-                call: Call<UserResponse<ArrayList<User>>>,
-                response: Response<UserResponse<ArrayList<User>>>
+                call: Call<ResponseType<ArrayList<User>>>,
+                response: Response<ResponseType<ArrayList<User>>>
             ) {
                 if (response.code() == 200) {
                     list = response.body()?.data?: ArrayList()
@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                     testTextView.visibility = View.GONE
                 }
                 else if(response.code() == 101) {
-                    Global.currentUser = null
+                    Global.currentUserId = null
                     testTextView.visibility = View.VISIBLE
                     mainRelativeLayout.visibility = View.GONE
                 }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onFailure(call: Call<UserResponse<ArrayList<User>>>, t: Throwable) {
+            override fun onFailure(call: Call<ResponseType<ArrayList<User>>>, t: Throwable) {
                 Log.e("NetworkTest", "error:$t")
             }
         })

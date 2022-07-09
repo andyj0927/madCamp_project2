@@ -15,7 +15,6 @@ class BasicInterceptor constructor(private val username: String, private val pas
         val newReq = chain.request().newBuilder()
             .addHeader("Authorization", credentials)
             .addHeader("Content-Type", "application/json")
-            .addHeader("token", Global.token?: "")
             .build()
 
         return chain.proceed(newReq)

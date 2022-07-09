@@ -12,17 +12,10 @@ data class User (
     val total: Int,
     val friends: ArrayList<Int>,
     val currentlyActive: Int,
+    val google: String?,
     val createdAt: Date,
     val updatedAt: Date
 )
-
-data class UserResponse<T>(
-    val status: Int,
-    val success: Boolean,
-    val message: String,
-    val data: T?,
-    val token: String?
-    )
 
 data class UserRegisterRequest(
     val userName: String,

@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.madcamp.project2.Data.User
 import com.madcamp.project2.Data.UserRegisterRequest
-import com.madcamp.project2.Data.UserResponse
+import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.ServiceCreator
 import retrofit2.Call
@@ -45,13 +45,13 @@ class RegisterActivity : AppCompatActivity() {
 
             val newUser = UserRegisterRequest(userName, displayName, password)
 
-            val call: Call<UserResponse<User>> =
+            val call: Call<ResponseType<User>> =
                 ServiceCreator.userService.postRegister(newUser)
 
-            call.enqueue(object : Callback<UserResponse<User>> {
+            call.enqueue(object : Callback<ResponseType<User>> {
                 override fun onResponse(
-                    call: Call<UserResponse<User>>,
-                    response: Response<UserResponse<User>>
+                    call: Call<ResponseType<User>>,
+                    response: Response<ResponseType<User>>
                 ) {
                     if (response.code() == 200) {
                         val data = response.body()?.data
@@ -75,7 +75,7 @@ class RegisterActivity : AppCompatActivity() {
                     }
                 }
 
-                override fun onFailure(call: Call<UserResponse<User>>, t: Throwable) {
+                override fun onFailure(call: Call<ResponseType<User>>, t: Throwable) {
                     Log.e("NetworkTest", "error:$t")
                 }
             })
