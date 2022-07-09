@@ -15,7 +15,6 @@ import com.madcamp.project2.Service.ServiceCreator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
