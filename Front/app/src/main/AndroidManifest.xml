@@ -35,6 +35,7 @@
         <activity android:name=".Home.MainActivity" />
         <activity android:name=".Auth.LoginActivity" />
         <activity android:name=".Auth.RegisterActivity" />
+        <activity android:name=".Auth.InfoActivity" />
 
     </application>
 </manifest>
