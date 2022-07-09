@@ -59,20 +59,22 @@ class LoginActivity : AppCompatActivity() {
                         response: Response<UserResponse<User>>
                     ) {
                         if (response.code() == 200) {
-                            val data = response.body()?.data
-                            Global.currentUser = data
+                            Global.currentUser = response.body()?.data
+                            Global.token = response.body()?.token
+
                             Toast.makeText(
                                 this@LoginActivity,
-                                "${data?.userName}님 반갑습니다!",
+                                "${Global.currentUser?.userName}님 반갑습니다!",
                                 Toast.LENGTH_LONG
                             ).show()
+
                             startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                             finish()
-                        }
-                        else if (response.code() == 400) {
+                        } else if (response.code() == 400) {
                             Toast.makeText(this@LoginActivity, "ID 또는 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show()
-                        }
-                        else if (response.code() == 500) {
+                        } else if (response.code() == 403) {
+                            Toast.makeText(this@LoginActivity, "ID가 없습니다.", Toast.LENGTH_SHORT).show()
+                        } else if (response.code() == 500) {
                             Toast.makeText(this@LoginActivity, "Internal Server error", Toast.LENGTH_LONG).show()
                         }
                     }

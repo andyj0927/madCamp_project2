@@ -4,4 +4,5 @@ import com.madcamp.project2.Data.User
 
 object Global {
     var currentUser: User? = null
+    var token: String? = null
 }

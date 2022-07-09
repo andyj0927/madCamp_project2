@@ -20,7 +20,8 @@ data class UserResponse<T>(
     val status: Int,
     val success: Boolean,
     val message: String,
-    val data: T?
+    val data: T?,
+    val token: String?
     )
 
 data class UserRegisterRequest(

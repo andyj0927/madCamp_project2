@@ -1,5 +1,6 @@
 package com.madcamp.project2.Service
 
+import com.madcamp.project2.Global
 import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,6 +15,7 @@ class BasicInterceptor constructor(private val username: String, private val pas
         val newReq = chain.request().newBuilder()
             .addHeader("Authorization", credentials)
             .addHeader("Content-Type", "application/json")
+            .addHeader("token", Global.token?: "")
             .build()
 
         return chain.proceed(newReq)

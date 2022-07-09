@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.madcamp.project2.Auth.LoginActivity
 import com.madcamp.project2.Auth.RegisterActivity
-import com.madcamp.project2.Data.User
 import com.madcamp.project2.Data.UserResponse
 import com.madcamp.project2.Global
 import com.madcamp.project2.Home.MainActivity
@@ -56,8 +55,6 @@ class TopFragment: Fragment() {
         }
 
         logoutButton.setOnClickListener {
-            val intent = Intent(activity, MainActivity::class.java)
-            startActivity(intent)
             val call: Call<UserResponse<Unit>> =
                 ServiceCreator.userService.getLogout()
 
@@ -68,18 +65,17 @@ class TopFragment: Fragment() {
                 ) {
                     if (response.code() == 200) {
                         Global.currentUser = null
+                        Global.token = null
                         setTopButtons()
 
                         Log.d("currentUser", Global.currentUser.toString())
-                        Toast.makeText(
-                            activity,
-                            "Logout Success",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(activity, LoginActivity::class.java))
+                        Toast.makeText(activity, "Logout Success", Toast.LENGTH_LONG).show()
+
+                        val intent = Intent(activity, MainActivity::class.java)
+                        startActivity(intent)
                     }
-                    else if (response.code() == 403) {
-                        Toast.makeText(activity, "Need to Login", Toast.LENGTH_LONG).show()
+                    else if (response.code() == 401) {
+                        Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_LONG).show()
                     }
                     else {
                         Toast.makeText(activity, "${response.code()}", Toast.LENGTH_LONG).show()
