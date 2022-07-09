@@ -43,39 +43,48 @@ class LoginActivity : AppCompatActivity() {
             val userName = editTextId.text.toString()
             val password = editTextPassword.text.toString()
 
-            val user = UserLoginRequest(userName, password)
+            if(userName == "" || password == "") {
+                Toast.makeText(this@LoginActivity, "빈 칸이 있습니다.", Toast.LENGTH_LONG).show()
+            }
 
-            val call: Call<UserResponse<User>> =
-                ServiceCreator.userService.postLogin(user)
+            else {
+                val user = UserLoginRequest(userName, password)
 
-            call.enqueue(object : Callback<UserResponse<User>> {
-                override fun onResponse(
-                    call: Call<UserResponse<User>>,
-                    response: Response<UserResponse<User>>
-                ) {
-                    if (response.code() == 200) {
-                        val data = response.body()?.data
-                        Global.currentUser = data
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "${data?.userName}님 반갑습니다!",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                        finish()
-                    }
-                    else if (response.code() == 400) {
-                        Toast.makeText(this@LoginActivity, "ID 또는 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show()
-                    }
-                    else if (response.code() == 500) {
-                        Toast.makeText(this@LoginActivity, "Internal Server error", Toast.LENGTH_LONG).show()
-                    }
-                }
+                val call: Call<UserResponse<User>> =
+                    ServiceCreator.userService.postLogin(user)
 
-                override fun onFailure(call: Call<UserResponse<User>>, t: Throwable) {
-                    Log.e("NetworkTest", "error:$t")
-                }
-            })
+                call.enqueue(object : Callback<UserResponse<User>> {
+                    override fun onResponse(
+                        call: Call<UserResponse<User>>,
+                        response: Response<UserResponse<User>>
+                    ) {
+                        if (response.code() == 200) {
+                            val data = response.body()?.data
+                            Global.currentUser = data
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "${data?.userName}님 반갑습니다!",
+                                Toast.LENGTH_LONG
+                            ).show()
+                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                            finish()
+                        }
+                        else if (response.code() == 400) {
+                            Toast.makeText(this@LoginActivity, "ID 또는 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show()
+                        }
+                        else if (response.code() == 500) {
+                            Toast.makeText(this@LoginActivity, "Internal Server error", Toast.LENGTH_LONG).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<UserResponse<User>>, t: Throwable) {
+                        Log.e("NetworkTest", "error:$t")
+                    }
+                })
+            }
+
+
+
         }
     }
 }
