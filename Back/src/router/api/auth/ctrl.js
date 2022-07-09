@@ -1,27 +1,30 @@
 const { Users } = require('../../../lib/database/models')
-const passport = require('passport')
 const sequelize = require('sequelize')
+const jwt = require('../../../lib/jwt')
+
 const Op = sequelize.Op
 
-// POST Register
+// POST /api/auth/register
+// to register user
 const register = async (req, res) => {
 	console.log(req.body)
 	const {userName, displayName, password} = req.body
 
 	try {
 		console.log("before findAll")
-		const user = await Users.findAll({
+		const user = await Users.findOne({
+			raw: true,
 			where: {
 				[Op.or]:[ { userName: userName }, { displayName: displayName }]
 			}
 		})
-		console.log("after findAll: " + user)
-		if(user === "" || user === undefined || user === null) {
+		if(user == null) {
 			const data = {
-				userName: userName,
-				displayName: displayName,
-				password: password,
+				userName,
+				displayName,
+				password,
 				friends: null,
+				google: null,
 			}
 			console.log("before insert data")
 			await Users.create(data)
@@ -37,45 +40,75 @@ const register = async (req, res) => {
 	}
 }
 
-// POST Login
-const login = async (req, res, next) => {
-	passport.authenticate('local', (authError, user, info) => {
-		if(authError) {
-			console.error(authError)
-			return next(authError)
+// POST /api/auth/login
+// to sign in
+const login = async (req, res) => {
+	const { userName, password } = req.body
+	console.log(userName)
+	const user = await Users.findOne({
+		raw: true,
+		where: {
+			userName: userName
 		}
+	})
 
-		if(!user) {
-			return res.status(400).send("BAD REQUEST")
+	await Users.update({
+		currentlyActive: 1,
+	}, {
+		where: {
+			id: user.id,
 		}
+	})
 
-		return req.login(user, loginError => {
-			if(loginError) {
-				console.error(loginError)
-				return next(loginError)
-			}
+	console.log(user)
+	if(!user) {
+		res.status(403).send()
+		return
+	}
 
-			return res.status(200).send({data: user})
-		})
-	})(req, res, next)
+	if(user.password !== password) {
+		res.status(400).send()
+		return
+	}
+	
+	res.status(200).send({
+		success: true,
+		message: "OK",
+		data: user,
+	})
 }
 
-// GET Logout
-const logout = (req, res, next) => {
+// GET /api/auth/logout
+// to sign out
+const logout = async (req, res) => {
 	try {
-		console.log("Debug 1")
-		req.session.destroy()
-		console.log("Debug 2")
-		res.status(200).send("Logout success")
+		const userId = req.id
+
+		await Users.update({
+			currentlyActive: 0
+		}, {
+			where: {
+				id: userId
+			}
+		})
+
+		res.status(200).send({
+			success: true,
+			message: "logout Success"
+		})
 	} catch(e) {
 		console.error(e)
-		res.status(500).send("internal server error")
+		res.status(500).send()
 	}
 }
 
+// GET /api/auth/user-list
+// to get all users for main activity
 const getUserList = async (req, res) => {
 	try {
-		const allUsers = Users.findAll()
+		const allUsers = await Users.findAll({
+			raw: true
+		})
 
 		res.status(200).send({ data: allUsers })
 	} catch(e) {
@@ -84,9 +117,99 @@ const getUserList = async (req, res) => {
 	}
 }
 
+// POST /api/auth/google/login
+// to get one user by googleToken
+const getUserByGoogleToken = async (req, res) => {
+	try {
+		console.log(req.body)
+		const googleToken = req.body
+
+		const data = await Users.findOne({
+			raw: true,
+			where: {
+				google: googleToken
+			}
+		})
+
+		const jwtToken = await jwt.sign(data)
+		if(data) {
+			res.status(200).send({
+				data,
+				token: jwtToken.token
+			})
+		}
+	} catch(e){
+		console.error(e)
+
+	}
+}
+
+// POST /api/auth/google/interlock
+// to interlock between local account and google account
+const interlockBetweenLocalAndGoogle = async (req, res) => {
+	try {
+		console.log(req.body)
+		const googleToken = req.body
+		const userId = req.id
+
+		await Users.update({
+			google: googleToken,
+		}, {
+			where: {
+				id: userId
+			}
+		})
+		res.send(200).send()
+	} catch (e) {
+		console.error(e)
+		res.send(500).send({
+			message: "INTERNAL SERVER ERROR"
+		})
+	}
+}
+
+// GET /api/auth/Info/{userId}
+// to get information of certail user
+const getUserInfo = async (req, res) => {
+	try {
+		const userId = req.params.userId
+
+		const user = await Users.findOne({
+			where: {
+				id: userId
+			}
+		})
+
+		if(user == null) {
+			res.status(404).send({
+				success: false,
+				message: "PAGE NOT FOUND",
+				data: null
+			})
+		} 
+
+		res.status(200).send({
+			success: true,
+			message: "STATUS OK",
+			data: user
+		})
+
+	} catch(e){
+		console.error(e)
+		res.status(500).send({
+			success: false,
+			message: "INTERNAL SERVER ERROR",
+			data: null
+		})
+	}
+}
+
 module.exports = {
 	getUserList,
 	register,
 	login,
-	logout
+	logout,
+	getUserInfo,
+	getUserByGoogleToken,
+	interlockBetweenLocalAndGoogle
 }

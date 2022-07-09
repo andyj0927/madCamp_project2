@@ -46,11 +46,16 @@ module.exports = {
 		  type: Sequelize.TEXT,
 		  allowNull: true
       },
-      currentlyActivy: {
+      currentlyActive: {
 		  allowNull: false,
 		  defaultValue: 0,
         type: Sequelize.TINYINT
       },
+		google: {
+			allowNull: true,
+			defaultValue: null,
+			type: Sequelize.TEXT
+		},
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

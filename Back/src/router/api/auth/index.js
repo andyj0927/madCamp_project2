@@ -1,11 +1,14 @@
 const { Router } = require('express')
 const ctrl = require('./ctrl')
-const { isLoggedIn, isNotLoggedIn } = require('./middlewares')
 const router = Router()
+const authUtil = require('./middlewares').checkToken
 
-router.get('/logout', isLoggedIn, ctrl.logout)
-router.get('/user-list/get', ctrl.getUserList)
-router.post('/register', isNotLoggedIn, ctrl.register)
-router.post('/login', isNotLoggedIn, ctrl.login)
+
+router.get('/logout', authUtil, ctrl.logout)
+router.get('/user-list', authUtil, ctrl.getUserList)
+router.post('/register', ctrl.register)
+router.post('/login', ctrl.login)
+router.post('/google/login', authUtil, ctrl.googleLogin)
+router.post('/google/interlock', authUtil, ctrl.interlockGoogle)
 
 module.exports = router
