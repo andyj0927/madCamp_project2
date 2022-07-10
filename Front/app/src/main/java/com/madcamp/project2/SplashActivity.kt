@@ -12,6 +12,11 @@ import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
+import org.json.JSONObject
+
 import retrofit2.Call
 import java.io.IOException
 
@@ -26,7 +31,13 @@ class SplashActivity : AppCompatActivity() {
         initGSO()
         initHeaders()
         initCurrentUser()
-        init()
+        initSocket()
+        initMain()
+    }
+
+    private fun initSocket() {
+        Global.socket = IO.socket(Global.WS_BASE_URL)
+        Global.socket?.connect()
     }
 
     private fun initCurrentUser() {
@@ -49,7 +60,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun init() {
+    private fun initMain() {
         Handler(Looper.getMainLooper()).postDelayed({
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

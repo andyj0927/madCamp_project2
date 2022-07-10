@@ -16,6 +16,8 @@ import com.madcamp.project2.Data.User
 import com.madcamp.project2.Global
 import com.madcamp.project2.Service.ServiceCreator
 import com.madcamp.project2.databinding.ActivityInfoBinding
+import org.json.JSONException
+import org.json.JSONObject
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
@@ -58,6 +60,14 @@ class InfoActivity : AppCompatActivity() {
         binding.toBattle.setOnClickListener{
             Log.d(TAG, "Let's go to battle")
 
+            val data = JSONObject()
+            try {
+                data.put("Challenger", Global.currentUserId)
+                data.put("Defender", userId)
+                Global.socket?.emit("Challenge Dual", data)
+            } catch(e: JSONException) {
+                e.printStackTrace()
+            }
         }
     }
 
