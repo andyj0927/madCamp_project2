@@ -28,16 +28,11 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        Global.socket = IO.socket(Global.WS_BASE_URL)
         initGSO()
         initHeaders()
         initCurrentUser()
-        initSocket()
         initMain()
-    }
-
-    private fun initSocket() {
-        Global.socket = IO.socket(Global.WS_BASE_URL)
-        Global.socket?.connect()
     }
 
     private fun initCurrentUser() {
@@ -73,6 +68,14 @@ class SplashActivity : AppCompatActivity() {
         Global.headers["token"] = PreferenceManager.getString(this@SplashActivity, PreferenceManager.PREFERENCES_NAME)
 
         Log.d(TAG, "${Global.headers["token"]}")
+
+        if(Global.headers["token"] != "") {
+            initCurrentUser()
+
+
+            Global.socket?.connect()
+            Global.socket?.emit("login", Global.currentUserId)
+        }
     }
 
     private fun initGSO() {

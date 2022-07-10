@@ -77,14 +77,16 @@ class TopFragment: Fragment() {
                         Global.currentUserId = null
                         Global.headers["token"] = ""
 
-                        googleSignOut()
+                        // googleSignOut()
                         setTopButtons()
 
+                        Global.socket?.disconnect()
                         Log.d(TAG, Global.currentUserId.toString())
                         Toast.makeText(activity, "Logout Success", Toast.LENGTH_LONG).show()
 
                         val intent = Intent(activity, MainActivity::class.java)
                         startActivity(intent)
+                        activity?.finish()
                     }
                     else if (response.code() == 401) {
                         Toast.makeText(activity, "Failed to Logout", Toast.LENGTH_LONG).show()
