@@ -12,6 +12,11 @@ import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
+import io.socket.client.IO
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
+import org.json.JSONObject
+
 import retrofit2.Call
 import java.io.IOException
 
@@ -23,10 +28,11 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        Global.socket = IO.socket(Global.WS_BASE_URL)
         initGSO()
         initHeaders()
         initCurrentUser()
-        init()
+        initMain()
     }
 
     private fun initCurrentUser() {
@@ -49,7 +55,7 @@ class SplashActivity : AppCompatActivity() {
         }
     }
 
-    private fun init() {
+    private fun initMain() {
         Handler(Looper.getMainLooper()).postDelayed({
             intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
@@ -62,6 +68,14 @@ class SplashActivity : AppCompatActivity() {
         Global.headers["token"] = PreferenceManager.getString(this@SplashActivity, PreferenceManager.PREFERENCES_NAME)
 
         Log.d(TAG, "${Global.headers["token"]}")
+
+        if(Global.headers["token"] != "") {
+            initCurrentUser()
+
+
+            Global.socket?.connect()
+            Global.socket?.emit("login", Global.currentUserId)
+        }
     }
 
     private fun initGSO() {

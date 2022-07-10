@@ -13,6 +13,7 @@ import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
 import com.madcamp.project2.databinding.ActivityLoginBinding
+import io.socket.client.IO
 import retrofit2.Call
 import java.io.IOException
 
@@ -102,6 +103,9 @@ class LoginActivity : AppCompatActivity() {
             Log.d(TAG, "$loginFlag")
             if(loginFlag) {
                 setJwt()
+
+                Global.socket?.connect()
+                Global.socket?.emit("login", Global.currentUserId)
             }
         } catch(e: Exception){
             e.printStackTrace()
@@ -112,32 +116,6 @@ class LoginActivity : AppCompatActivity() {
         Log.d(TAG, "before setJwt, currentId: ${Global.currentUserId}")
         val call: Call<ResponseType<String>> =
             ServiceCreator.jwtService.setJwt(Global.headers, JwtRequest(Global.currentUserId!!))
-
-        /*
-        jwtCall.enqueue(object : Callback<ResponseType<String>> {
-            override fun onResponse(
-                call: Call<ResponseType<String>>,
-                response: Response<ResponseType<String>>
-            ) {
-                if (response.code() == 200) {
-                    val token = response.body()?.data!!
-                    PreferenceManager.setString(this@LoginActivity, "JWT", token)
-                    Global.headers["token"] = token
-                    Log.d(TAG, "token: $token")
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this@LoginActivity, response.body()?.message?: "null", Toast.LENGTH_LONG)
-                        .show()
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseType<String>>, t: Throwable) {
-                Log.e("NetworkTest", "error: $t")
-            }
-        })
-
-         */
 
         var flag = false
         val thread = Thread {
