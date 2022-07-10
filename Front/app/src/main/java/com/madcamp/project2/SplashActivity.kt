@@ -39,7 +39,6 @@ class SplashActivity : AppCompatActivity() {
     private fun initGSO() {
         Global.GSO = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.server_client_id))
-            .requestEmail()
             .build()
 
         Global.mGoogleSignInClient = GoogleSignIn.getClient(this@SplashActivity, Global.GSO)

@@ -10,7 +10,7 @@ data class User (
     val draw: Int,
     val lose: Int,
     val total: Int,
-    val friends: ArrayList<Int>,
+    val friends: String,
     val currentlyActive: Int,
     val google: String?,
     val createdAt: Date,
@@ -27,3 +27,7 @@ data class UserLoginRequest(
     val userName: String,
     val password: String
     )
+
+data class GoogleRequest(
+    val token: String
+)
