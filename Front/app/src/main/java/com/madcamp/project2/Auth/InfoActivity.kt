@@ -34,6 +34,7 @@ class InfoActivity : AppCompatActivity() {
         initBinding()
         initListeners()
         initUser()
+        initUIs()
     }
 
     private fun initBinding() {
@@ -53,6 +54,19 @@ class InfoActivity : AppCompatActivity() {
                 binding.completeGoogleSignInTextView.visibility = View.VISIBLE
             }
         }
+
+        binding.toBattle.setOnClickListener{
+            Log.d(TAG, "Let's go to battle")
+
+        }
+    }
+
+    private fun initUIs() {
+        if(Global.currentUserId == userId || user?.currentlyActive == 0) {
+            binding.toBattle.visibility = View.GONE
+        } else {
+            binding.toBattle.visibility = View.VISIBLE
+        }
     }
 
     private fun initUser() {
@@ -65,34 +79,6 @@ class InfoActivity : AppCompatActivity() {
     private fun getUser(id: Int) {
         val call: retrofit2.Call<ResponseType<User>> =
             ServiceCreator.userService.getUserInfo(Global.headers, id)
-
-        /*
-        call.enqueue(object : Callback<ResponseType<User>> {
-            override fun onResponse(
-                call: retrofit2.Call<ResponseType<User>>,
-                response: Response<ResponseType<User>>
-            ) {
-                if (response.code() == 200) {
-                    user = response.body()?.data
-
-                    Log.d(TAG, "$user")
-                    binding.name.text = user?.displayName!!
-                    binding.win.text = (user?.win!!).toString()
-                    binding.draw.text = (user?.draw!!).toString()
-                    binding.lose.text = (user?.lose!!).toString()
-                }
-                else {
-                    Log.d(TAG, "getUserInfo Status Code: ${response.code()}")
-                    Toast.makeText(this@InfoActivity, response.body()?.message, Toast.LENGTH_LONG).show()
-                }
-            }
-
-            override fun onFailure(call: retrofit2.Call<ResponseType<User>>, t: Throwable) {
-                Log.e("NetworkTest", "error:$t")
-            }
-        })
-
-         */
 
         val thread = Thread {
             try {
