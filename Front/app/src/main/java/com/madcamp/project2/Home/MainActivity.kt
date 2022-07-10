@@ -57,9 +57,9 @@ class MainActivity : AppCompatActivity() {
                     mainRelativeLayout.visibility = View.GONE
                 }
                 else if(response.code() == 500) {
-                    val data = response.body()?.data
+                    val message = response.body()?.message
 
-                    Toast.makeText(this@MainActivity, "$data", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, "$message", Toast.LENGTH_LONG).show()
                 }
             }
 

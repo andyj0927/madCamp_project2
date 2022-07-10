@@ -58,19 +58,34 @@
                 />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/loginButton"
+        <LinearLayout
+            android:id="@+id/loginRegisterLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_below="@id/loginPasswordLinearLayout"
-            android:text="로그인"
-            />
+            >
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="로그인"
+                />
 
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="회원가입"
+                />
+
+        </LinearLayout>
         <com.google.android.gms.common.SignInButton
             android:id="@+id/googleSignInButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/loginButton"
+            android:layout_below="@id/loginRegisterLayout"
             />
 
 

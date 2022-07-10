@@ -18,28 +18,28 @@ interface UserService {
     @POST("auth/login")
     fun postLogin(
         @Body body: UserLoginRequest
-    ): Call<ResponseType<User>>
+    ): Call<ResponseType<Int>>
 
     @GET("auth/logout")
     fun getLogout(
         @HeaderMap headers: Map<String, String>
     ): Call<ResponseType<Unit>>
 
-    @GET("auth/Info/{userId}")
+    @GET("auth/Info/{id}")
     fun getUserInfo(
         @HeaderMap headers: Map<String, String>,
-        @Path("userId") userId: Int
+        @Path("id") id: Int
     ): Call<ResponseType<User>>
 
     @POST("auth/google/login")
     fun getGoogleLogin(
         @HeaderMap headers: Map<String, String>,
-        @Body body: String
-    ): Call<ResponseType<User>>
+        @Body body: GoogleRequest
+    ): Call<ResponseType<Int>>
 
     @POST("auth/google/interlock")
-    fun interlockGoogle(
+    fun interlockBetweenLocalAndGoogle(
         @HeaderMap headers: Map<String, String>,
-        @Body body: String
-    ): Call<ResponseType<User>>
+        @Body body: GoogleRequest
+    ): Call<ResponseType<Unit>>
 }

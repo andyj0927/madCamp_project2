@@ -92,13 +92,13 @@ class TopFragment: Fragment() {
                     else {
                         Toast.makeText(activity, "${response.code()}", Toast.LENGTH_LONG).show()
                     }
+                    activity?.finish()
                 }
 
                 override fun onFailure(call: Call<ResponseType<Unit>>, t: Throwable) {
                     Log.e(TAG, "error:$t")
                 }
             })
-            activity?.finish()
         }
     }
 
