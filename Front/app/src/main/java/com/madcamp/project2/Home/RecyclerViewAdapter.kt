@@ -9,8 +9,6 @@ import com.madcamp.project2.Data.User
 import com.madcamp.project2.R
 
 class RecyclerViewAdapter(private val dataset: MutableList<User>): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_user,parent,false)
         return ViewHolder(view)

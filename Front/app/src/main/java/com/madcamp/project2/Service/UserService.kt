@@ -42,4 +42,9 @@ interface UserService {
         @HeaderMap headers: Map<String, String>,
         @Body body: GoogleRequest
     ): Call<ResponseType<Unit>>
+
+    @POST("auth/token")
+    fun getUserByToken(
+        @HeaderMap headers: Map<String, String>
+    ): Call<ResponseType<Int>>
 }

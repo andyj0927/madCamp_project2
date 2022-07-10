@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
@@ -19,7 +20,8 @@ import java.lang.Exception
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
-    lateinit var list: ArrayList<User>
+    private val TAG = this::class.java.simpleName
+    lateinit var list: MutableList<User>
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
     lateinit var testTextView: TextView
     lateinit var recview: RecyclerView
@@ -27,19 +29,20 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        list = ArrayList()
+        list = mutableListOf()
         initViews()
         getUserList()
     }
 
     private fun initViews() {
-        recview =findViewById(R.id.rc_view)
+        recview = findViewById(R.id.mainRelativeLayout)
         testTextView = findViewById(R.id.testTextView)
     }
 
     private fun getUserList() {
         val call: Call<ResponseType<ArrayList<User>>> =
             ServiceCreator.userService.getUserList(Global.headers)
+
 
         call.enqueue(object : Callback<ResponseType<ArrayList<User>>> {
             override fun onResponse(
@@ -50,8 +53,23 @@ class MainActivity : AppCompatActivity() {
                     list = response.body()?.data?: ArrayList()
                     Log.d("userList", list.toString())
 
+                    for (i in 0 until list.size) {
+                        Log.d(TAG, "${list[i].id} : ${Global.currentUserId}")
+                        if(list[i].id == Global.currentUserId) {
+                            Log.d("userList", i.toString())
+                            list.removeAt(i)
+                            break
+                        }
+                    }
+
+                    list.sortByDescending { it.currentlyActive }
+                    Log.d("userList", list.toString())
                     recyclerViewAdapter = RecyclerViewAdapter(list)
                     recview.adapter = recyclerViewAdapter
+
+                    val manager = LinearLayoutManager(this@MainActivity)
+                    manager.orientation = LinearLayoutManager.VERTICAL
+                    recview.layoutManager = manager
 
                     recview.visibility = View.VISIBLE
                     testTextView.visibility = View.GONE

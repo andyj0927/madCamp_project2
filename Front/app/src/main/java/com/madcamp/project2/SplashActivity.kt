@@ -8,8 +8,12 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
+import com.madcamp.project2.Service.ServiceCreator
+import retrofit2.Call
+import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
     private val TAG = this::class.java.simpleName
@@ -21,7 +25,28 @@ class SplashActivity : AppCompatActivity() {
 
         initGSO()
         initHeaders()
+        initCurrentUser()
         init()
+    }
+
+    private fun initCurrentUser() {
+        val call: Call<ResponseType<Int>> =
+            ServiceCreator.userService.getUserByToken(Global.headers)
+
+        val thread = Thread {
+            try {
+                Global.currentUserId = call.execute().body()?.data
+            } catch(e: IOException) {
+                e.printStackTrace()
+            }
+        }
+        thread.start()
+
+        try {
+            thread.join()
+        } catch(e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun init() {

@@ -107,7 +107,7 @@ class TopFragment: Fragment() {
     }
 
     private fun setTopButtons() {
-        if(Global.currentUserId != null) {
+        if(Global.headers["token"] != "") {
             loginButton.visibility = View.GONE
             registerButton.visibility = View.GONE
             myInfoButton.visibility = View.VISIBLE

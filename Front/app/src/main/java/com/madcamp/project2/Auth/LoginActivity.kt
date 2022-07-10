@@ -85,33 +85,6 @@ class LoginActivity : AppCompatActivity() {
     private fun login(call: Call<ResponseType<Int>>) {
         var loginFlag = false
 
-        /*
-        call.enqueue(object : Callback<ResponseType<Int>> {
-            override fun onResponse(
-                call: Call<ResponseType<Int>>,
-                response: Response<ResponseType<Int>>
-            ) {
-                callExecute = true
-                if (response.code() == 200) {
-                    Global.currentUserId = response.body()?.data!!
-                    loginFlag = true
-                    Log.d(TAG, "callExecute: $callExecute")
-                } else if (response.code() == 400) {
-                    Toast.makeText(this@LoginActivity, "ID 또는 비밀번호가 틀렸습니다.", Toast.LENGTH_LONG).show()
-                } else if (response.code() == 403) {
-                    Toast.makeText(this@LoginActivity, "ID가 없습니다.", Toast.LENGTH_SHORT).show()
-                } else if (response.code() == 500) {
-                    Toast.makeText(this@LoginActivity, "Internal Server error", Toast.LENGTH_LONG).show()
-                }
-            }
-
-
-            override fun onFailure(call: Call<ResponseType<Int>>, t: Throwable) {
-                Log.e("NetworkTest", "error:$t")
-            }
-        })
-        */
-
         val thread = Thread {
             try {
                 Global.currentUserId = call.execute().body()?.data

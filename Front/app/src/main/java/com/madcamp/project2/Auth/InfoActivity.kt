@@ -62,6 +62,7 @@ class InfoActivity : AppCompatActivity() {
     }
 
     private fun initUIs() {
+        Log.d(TAG, "${Global.currentUserId} : ${userId}")
         if(Global.currentUserId == userId || user?.currentlyActive == 0) {
             binding.toBattle.visibility = View.GONE
         } else {
