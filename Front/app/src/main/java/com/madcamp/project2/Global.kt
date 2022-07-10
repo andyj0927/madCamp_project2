@@ -9,7 +9,9 @@ import com.madcamp.project2.Data.User
 object Global {
     lateinit var GSO: GoogleSignInOptions
     lateinit var mGoogleSignInClient: GoogleSignInClient
+    var pos1: Int = -1
+    var pos2: Int = -1
     var headers = HashMap<String, String>()
-    val BASE_URL = "http://192.249.18.176/api/"
+
     var currentUserId: Int? = null
 }

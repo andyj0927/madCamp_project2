@@ -18,7 +18,7 @@ object WebSocketManager {
     private var isConnect = false
     private var connectNum = 0
 
-    fun init(url: String, _messageListener: MessageListener) {
+    fun init(url: String, messageListener: MessageListener) {
         client = OkHttpClient.Builder()
             .writeTimeout(5, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.SECONDS)
@@ -26,7 +26,7 @@ object WebSocketManager {
             .build()
 
         request = Request.Builder().url(url).build()
-        messageListener = _messageListener
+        this.messageListener = messageListener
     }
 
     fun connect() {
@@ -51,7 +51,7 @@ object WebSocketManager {
         }
     }
 
-    fun isConnect(): Boolean {
+    private fun isConnect(): Boolean {
         return isConnect()
     }
 
