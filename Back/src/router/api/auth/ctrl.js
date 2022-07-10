@@ -63,12 +63,10 @@ const login = async (req, res) => {
 	console.log(user)
 	if(!user) {
 		res.status(403).send()
-		return
 	}
 
 	if(user.password !== password) {
 		res.status(400).send()
-		return
 	}
 	
 	res.status(200).send({
