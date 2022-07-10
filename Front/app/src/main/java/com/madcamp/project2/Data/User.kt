@@ -2,7 +2,7 @@ package com.madcamp.project2.Data
 
 import java.util.*
 
-data class User (
+data class User(
     val id: Int,
     val userName: String,
     val displayName: String,
