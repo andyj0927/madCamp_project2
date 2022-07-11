@@ -1,5 +1,7 @@
 package com.madcamp.project2.Home
 
+import android.content.Intent
+import android.icu.text.IDNA
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +11,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.madcamp.project2.Auth.InfoActivity
 import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
 import com.madcamp.project2.Global
@@ -26,12 +29,14 @@ class MainActivity : AppCompatActivity() {
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
     lateinit var testTextView: TextView
     lateinit var recview: RecyclerView
+    lateinit var listener: RecyclerViewClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         list = mutableListOf()
         initViews()
+        initRecyclerViewListener()
         initRefresh()
         Global.initReceiveChallengeSocket(this@MainActivity)
         getUserList()
@@ -58,6 +63,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun initRecyclerViewListener() {
+        listener = object : RecyclerViewClickListener {
+            override fun onClick(view: View, position: Int) {
+                val intent = Intent(this@MainActivity, InfoActivity::class.java)
+                intent.putExtra("id", list[position].id)
+                startActivity(intent)
+            }
+        }
+    }
+
     private fun getUserList() {
         val call: Call<ResponseType<ArrayList<User>>> =
             ServiceCreator.userService.getUserList(Global.headers)
@@ -82,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
                     list.sortByDescending { it.currentlyActive }
                     Log.d("userList", list.toString())
-                    recyclerViewAdapter = RecyclerViewAdapter(list)
+                    recyclerViewAdapter = RecyclerViewAdapter(list, listener)
                     recview.adapter = recyclerViewAdapter
 
                     val manager = LinearLayoutManager(this@MainActivity)
