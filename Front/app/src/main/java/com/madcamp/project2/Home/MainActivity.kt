@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        recview = findViewById(R.id.mainRelativeLayout)
+        recview = findViewById(R.id.rc_view)
         testTextView = findViewById(R.id.testTextView)
     }
 
