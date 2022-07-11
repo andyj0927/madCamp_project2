@@ -136,6 +136,7 @@
         </GridLayout>
 
         <LinearLayout
+            android:id="@+id/linkgoogle"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@id/gameGridLayout"
@@ -165,6 +166,14 @@
                 android:visibility="gone"
                 />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/toBattle"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@id/linkgoogle"
+            android:text="대결하기"
+            />
 
     </RelativeLayout>
 
