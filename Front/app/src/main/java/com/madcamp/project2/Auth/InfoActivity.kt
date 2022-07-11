@@ -1,5 +1,6 @@
 package com.madcamp.project2.Auth
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,13 +14,14 @@ import com.google.android.gms.tasks.Task
 import com.madcamp.project2.Data.GoogleRequest
 import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
+import com.madcamp.project2.Game.GameActivity
 import com.madcamp.project2.Global
 import com.madcamp.project2.Service.ServiceCreator
 import com.madcamp.project2.databinding.ActivityInfoBinding
+import io.socket.client.IO
+import io.socket.client.Socket
 import org.json.JSONException
 import org.json.JSONObject
-import retrofit2.Callback
-import retrofit2.Response
 import java.io.IOException
 
 class InfoActivity : AppCompatActivity() {
@@ -35,7 +37,6 @@ class InfoActivity : AppCompatActivity() {
 
         initBinding()
         initListeners()
-        Global.initReceiveChallengeSocket(this@InfoActivity)
         initUser()
         initUIs()
     }
@@ -65,9 +66,18 @@ class InfoActivity : AppCompatActivity() {
 
             val data = JSONObject()
             try {
-                data.put("Challenger", Global.currentUserId)
-                data.put("Defender", userId)
-                Global.socket?.emit("Challenge Dual", data)
+                data.put("c_id", Global.currentUserId)
+                data.put("d_id", userId)
+
+                Log.d(TAG, "battle: $data")
+
+                Global.socket?.emit("Dual Submit", data)
+
+                val intent = Intent(this@InfoActivity, GameActivity::class.java)
+                intent.putExtra("c_id", Global.currentUserId)
+                intent.putExtra("d_id", userId)
+                startActivity(intent)
+
             } catch(e: JSONException) {
                 e.printStackTrace()
             }
@@ -148,27 +158,6 @@ class InfoActivity : AppCompatActivity() {
 
             val call: retrofit2.Call<ResponseType<Unit>> =
                 ServiceCreator.userService.interlockBetweenLocalAndGoogle(Global.headers, GoogleRequest(idToken!!))
-
-            /*
-            call.enqueue(object : Callback<ResponseType<Unit>> {
-                override fun onResponse(
-                    call: retrofit2.Call<ResponseType<Unit>>,
-                    response: Response<ResponseType<Unit>>
-                ) {
-                    if (response.code() == 200) {
-
-                    }
-                    else if(response.code() == 500) {
-                        Toast.makeText(this@InfoActivity, response.body()?.message, Toast.LENGTH_LONG).show()
-                    }
-                }
-
-                override fun onFailure(call: retrofit2.Call<ResponseType<Unit>>, t: Throwable) {
-                    Log.e("NetworkTest", "error:$t")
-                }
-            })
-
-             */
 
             val thread = Thread {
                 try {

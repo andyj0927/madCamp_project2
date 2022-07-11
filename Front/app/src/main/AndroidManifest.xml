@@ -35,5 +35,6 @@
         <activity android:name=".Auth.LoginActivity" />
         <activity android:name=".Auth.RegisterActivity" />
         <activity android:name=".Auth.InfoActivity" />
+        <activity android:name=".Game.GameActivity" />
     </application>
 </manifest>

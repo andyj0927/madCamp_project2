@@ -1,5 +1,8 @@
 package com.madcamp.project2
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +15,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.madcamp.project2.Data.ResponseType
+import com.madcamp.project2.Game.GameActivity
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
@@ -37,6 +41,7 @@ class SplashActivity : AppCompatActivity() {
         logo = findViewById(R.id.splashlogo)
         splashImg= findViewById(R.id.splashimg)
         lottie=findViewById(R.id.lottie)
+
         Global.socket = IO.socket(Global.WS_BASE_URL)
         splashImg.animate().translationY((-2500).toFloat()).setDuration(1000).setStartDelay(3000)
         logo.animate().translationY((2000).toFloat()).setDuration(1000).setStartDelay(3000)
@@ -84,7 +89,6 @@ class SplashActivity : AppCompatActivity() {
         if(Global.headers["token"] != "") {
             initCurrentUser()
 
-
             Global.socket?.connect()
             Global.socket?.emit("login", Global.currentUserId)
         }
@@ -97,4 +101,6 @@ class SplashActivity : AppCompatActivity() {
 
         Global.mGoogleSignInClient = GoogleSignIn.getClient(this@SplashActivity, Global.GSO)
     }
+
+
 }
