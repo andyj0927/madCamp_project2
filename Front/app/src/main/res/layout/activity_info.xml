@@ -173,6 +173,7 @@
             android:layout_height="60dp"
             android:layout_below="@id/linkgoogle"
             android:text="대결하기"
+            android:backgroundTint="@color/black"
             />
 
     </RelativeLayout>

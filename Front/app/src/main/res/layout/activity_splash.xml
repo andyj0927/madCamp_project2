@@ -4,14 +4,41 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <ImageView
+        android:id="@+id/splashimg"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This is Splash"
-        android:textSize="24sp"
+        android:layout_height="900dp"
+        android:src="@drawable/backgroundsplash"
+        android:scaleType="centerCrop"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
+    <ImageView
+        android:id="@+id/splashlogo"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/logo"
+        android:scaleType="centerCrop"
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie"
+        app:lottie_autoPlay="true"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        app:layout_constraintVertical_bias="0"
+        app:lottie_rawRes="@raw/splash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/splashlogo"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

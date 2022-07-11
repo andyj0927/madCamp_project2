@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.madcamp.project2.Data.ResponseType
@@ -26,14 +29,23 @@ import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
     private val TAG = this::class.java.simpleName
-    private val duration: Long = 1000
+    private val duration: Long = 5000
+    lateinit var logo: ImageView
+    lateinit var splashImg: ImageView
+    lateinit var lottie: LottieAnimationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        logo = findViewById(R.id.splashlogo)
+        splashImg= findViewById(R.id.splashimg)
+        lottie=findViewById(R.id.lottie)
 
         Global.socket = IO.socket(Global.WS_BASE_URL)
+        splashImg.animate().translationY((-2500).toFloat()).setDuration(1000).setStartDelay(3000)
+        logo.animate().translationY((2000).toFloat()).setDuration(1000).setStartDelay(3000)
+        lottie.animate().translationY((1400).toFloat()).setDuration(1000).setStartDelay(3000)
         initGSO()
         initHeaders()
         initCurrentUser()
