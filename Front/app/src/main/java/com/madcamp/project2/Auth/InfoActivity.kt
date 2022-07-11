@@ -35,6 +35,7 @@ class InfoActivity : AppCompatActivity() {
 
         initBinding()
         initListeners()
+        Global.initReceiveChallengeSocket(this@InfoActivity)
         initUser()
         initUIs()
     }
@@ -57,6 +58,8 @@ class InfoActivity : AppCompatActivity() {
             }
         }
 
+
+        // ------------------------------------ 대겳 버튼 -------------------------------------------
         binding.toBattle.setOnClickListener{
             Log.d(TAG, "Let's go to battle")
 

@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
 import com.madcamp.project2.Global
@@ -16,7 +17,7 @@ import com.madcamp.project2.Service.ServiceCreator
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Exception
+import kotlin.Exception
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         list = mutableListOf()
         initViews()
+        initRefresh()
+        Global.initReceiveChallengeSocket(this@MainActivity)
         getUserList()
     }
 
@@ -39,10 +42,25 @@ class MainActivity : AppCompatActivity() {
         testTextView = findViewById(R.id.testTextView)
     }
 
+    private fun initRefresh() {
+        val refreshList: SwipeRefreshLayout = findViewById(R.id.refreshList)
+        refreshList.setOnRefreshListener {
+            val thread = Thread {
+                getUserList()
+            }
+            thread.start()
+            try {
+                thread.join()
+                recyclerViewAdapter.notifyDataSetChanged()
+                refreshList.isRefreshing = false
+            } catch (e: Exception){
+                e.printStackTrace()
+            }
+        }
+    }
     private fun getUserList() {
         val call: Call<ResponseType<ArrayList<User>>> =
             ServiceCreator.userService.getUserList(Global.headers)
-
 
         call.enqueue(object : Callback<ResponseType<ArrayList<User>>> {
             override fun onResponse(
@@ -51,12 +69,12 @@ class MainActivity : AppCompatActivity() {
             ) {
                 if (response.code() == 200) {
                     list = response.body()?.data?: ArrayList()
-                    Log.d("userList", list.toString())
+                    Log.d(TAG, "UserList: ${list}")
 
                     for (i in 0 until list.size) {
                         Log.d(TAG, "${list[i].id} : ${Global.currentUserId}")
                         if(list[i].id == Global.currentUserId) {
-                            Log.d("userList", i.toString())
+                            Log.d(TAG, "currentUserId: ${i.toString()}")
                             list.removeAt(i)
                             break
                         }

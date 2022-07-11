@@ -15,15 +15,22 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/top_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0"
-        />
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <TextView
         android:id="@+id/testTextView"
