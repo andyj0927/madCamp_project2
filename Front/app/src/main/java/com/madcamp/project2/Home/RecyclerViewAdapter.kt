@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.madcamp.project2.Data.User
@@ -21,11 +22,12 @@ class RecyclerViewAdapter(val dataset: MutableList<User>, val listener: Recycler
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val displayname : TextView = itemView.findViewById(R.id.displayname)
-        private val currentlyActive: TextView = itemView.findViewById(R.id.currentlyactive)
+        private val currentlyActive: ImageView = itemView.findViewById(R.id.activeCircle)
         private val c_view = view
         fun bind(item: User, position: Int) {
             displayname.text = item.displayName
-            currentlyActive.text = item.currentlyActive.toString()
+            if(item.currentlyActive == 1)  currentlyActive.setBackgroundResource(R.drawable.green_circle)
+            else currentlyActive.setBackgroundResource(R.drawable.empty_circle)
             c_view.setOnClickListener{
                 listener.onClick(c_view, position)
             }
