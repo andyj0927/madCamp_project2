@@ -13,7 +13,6 @@ import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
 import com.madcamp.project2.databinding.ActivityLoginBinding
-import io.socket.client.IO
 import retrofit2.Call
 import java.io.IOException
 

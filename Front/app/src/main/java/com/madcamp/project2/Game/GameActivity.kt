@@ -6,9 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import com.madcamp.project2.Data.Card
+import com.madcamp.project2.Global
 import com.madcamp.project2.databinding.ActivityGameBinding
+import io.socket.client.IO
+import io.socket.client.Socket
 
 class GameActivity: AppCompatActivity() {
+    private val URL = Global.WS_BASE_URL + "gameRoom/"
+    private var socket: Socket? = null
     private val TAG: String = this.javaClass.simpleName
     private var mBinding: ActivityGameBinding? = null
     private val binding get() = mBinding!!
@@ -18,9 +23,16 @@ class GameActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+        initSocket()
         initBinding()
         initVars()
         initRecyclerView()
+    }
+
+    private fun initSocket() {
+        socket = IO.socket(URL)
+        socket?.connect()
     }
 
     private fun initBinding() {
@@ -72,8 +84,5 @@ class GameActivity: AppCompatActivity() {
 
         binding.cardRecyclerView.layoutManager = gridLayoutManager
         binding.cardRecyclerView.adapter = cardAdapter
-
-        val dividerItemDecoration = DividerItemDecoration(binding.cardRecyclerView.context, gridLayoutManager.orientation)
-        binding.cardRecyclerView.addItemDecoration(dividerItemDecoration)
     }
 }

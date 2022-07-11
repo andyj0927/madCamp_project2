@@ -1,5 +1,6 @@
 package com.madcamp.project2.Home
 
+import android.content.Context
 import android.content.Intent
 import android.icu.text.IDNA
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +18,8 @@ import com.madcamp.project2.Data.User
 import com.madcamp.project2.Global
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.ServiceCreator
+import io.socket.client.IO
+import io.socket.client.Socket
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -35,10 +38,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         list = mutableListOf()
+        Global.initSocket(this@MainActivity)
         initViews()
         initRecyclerViewListener()
         initRefresh()
-        Global.initReceiveChallengeSocket(this@MainActivity)
         getUserList()
     }
 
@@ -124,5 +127,9 @@ class MainActivity : AppCompatActivity() {
                 Log.e("NetworkTest", "error:$t")
             }
         })
+    }
+
+    fun getContext(): Context {
+        return this.getContext()
     }
 }

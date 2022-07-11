@@ -18,6 +18,8 @@ import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
+import io.socket.client.IO
+import io.socket.client.Socket
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

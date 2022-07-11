@@ -1,5 +1,8 @@
 package com.madcamp.project2
 
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -9,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.madcamp.project2.Data.ResponseType
+import com.madcamp.project2.Game.GameActivity
 import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Service.PreferenceManager
 import com.madcamp.project2.Service.ServiceCreator
@@ -27,6 +31,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
 
         Global.socket = IO.socket(Global.WS_BASE_URL)
         initGSO()
@@ -72,7 +77,6 @@ class SplashActivity : AppCompatActivity() {
         if(Global.headers["token"] != "") {
             initCurrentUser()
 
-
             Global.socket?.connect()
             Global.socket?.emit("login", Global.currentUserId)
         }
@@ -85,4 +89,6 @@ class SplashActivity : AppCompatActivity() {
 
         Global.mGoogleSignInClient = GoogleSignIn.getClient(this@SplashActivity, Global.GSO)
     }
+
+
 }
