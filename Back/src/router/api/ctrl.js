@@ -2,16 +2,19 @@ const { Users } = require('../../lib/database/models')
 
 const getUserList = async (req, res) => {
 	try {
-		userList = await Users.findAll()
+		const userList = await Users.findAll()
 		
 		res.status(200).send({
-			sessonId: req.session.sessionId,
+			success: true,
+			message: "STATUS OK",
 			data: userList
 		})
 	} catch(e) {
 		console.error(e)
 		res.status(500).send({
-			data: "internal server error"
+			success: false,
+			message: "INTERNAL SERVER ERROR",
+			data: null
 		})
 	}
 }

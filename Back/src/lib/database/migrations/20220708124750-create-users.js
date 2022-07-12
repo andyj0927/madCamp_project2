@@ -44,7 +44,8 @@ module.exports = {
       },
       friends: {
 		  type: Sequelize.TEXT,
-		  allowNull: true
+		  allowNull: false,
+		  defaultValue: "{}"
       },
       currentlyActive: {
 		  allowNull: false,

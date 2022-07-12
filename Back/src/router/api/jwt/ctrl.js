@@ -1,22 +1,24 @@
 const jwt = require('../../../lib/jwt')
-const { Users } = require('../../../lib/database/models')
 
-const getJwt = (req, res) => {
+// POST /api/jwt/sign
+// to set and get json web token
+const setJwt = async (req, res) => {
 	try {
-		const user = await Users.findOne({
-			where: {
-				id: req.id
-			}
-		})
+		console.log("/api/jwt/sign")
+		console.log(req.body)
+		const { id } = req.body
+		console.log(id)
+		const promiseToken = await jwt.sign(id)
+		const token = promiseToken.token
 
-		const token = await jwt.sign(user).token
+		console.log(token)
 
 		res.status(200).send({
 			success: true,
-			message: "Json Web Token",
+			message: "STATUS OK",
 			data: token
 		})
-	} catch(e) {
+	} catch(e){
 		console.error(e)
 		res.status(500).send({
 			success: false,
@@ -27,5 +29,5 @@ const getJwt = (req, res) => {
 }
 
 module.exports = {
-	getJwt
+	setJwt
 }

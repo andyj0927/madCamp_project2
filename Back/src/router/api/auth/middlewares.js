@@ -4,22 +4,40 @@ const TOKEN_INVALID = -2
 
 const authUtil = {
 	checkToken: async (req, res, next) => {
-		var token = req.headers.token
+		const token = req.headers.token
 
-		if(!token || token === "") return res.status(403).send()
+		if(!token || token === "") {
+			console.log("token is null")
+			return res.status(400).send({
+				success: false,
+				message: "BAD REQUEST",
+				data: null
+			})
+		}
 
-		const user = await jwt.verify(token)
+		const ret = await jwt.verify(token)
+		if(ret === TOKEN_EXPIRED)
+			return res.status(401).send({
+				success: false,
+				message: "UNAUTHORIZED",
+				data: null
+			})
 
-		if(user === TOKEN_EXPIRED)
-			res.status(401).send()
+		if(ret === TOKEN_INVALID)
+			return res.status(401).send({
+				success: false,
+				message: "UNAUTHORIZED",
+				data: null
+			})
 
-		if(user === TOKEN_INVALID)
-			res.status(401).send()
+		if(ret == null || ret == undefined)
+			return res.status(401).send({
+				success: false,
+				message: "UNAUTHORIZED",
+				data: null
+			})
 
-		if(user.id === undefined)
-			return res.status(401).send()
-
-		req.id = user.id
+		req.id = ret.id 
 		next()
 	}
 }
