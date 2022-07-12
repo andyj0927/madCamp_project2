@@ -75,7 +75,8 @@ class InfoActivity : AppCompatActivity() {
 
                 val intent = Intent(this@InfoActivity, GameActivity::class.java)
                 intent.putExtra("c_id", Global.currentUserId)
-                intent.putExtra("d_id", userId)
+                    .putExtra("d_id", userId)
+
                 startActivity(intent)
 
             } catch(e: JSONException) {
@@ -145,6 +146,7 @@ class InfoActivity : AppCompatActivity() {
             // The Task returned from this call is always completed, no need to attach
             // a listener.
             val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
+            Log.d(TAG, "task에서 문제가 생기나? $task")
             handleSignInResult(task)
         }
     }

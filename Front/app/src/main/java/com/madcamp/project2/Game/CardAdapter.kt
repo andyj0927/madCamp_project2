@@ -8,10 +8,12 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.madcamp.project2.Data.Card
 import com.madcamp.project2.Global
+import com.madcamp.project2.Home.RecyclerViewClickListener
 import com.madcamp.project2.R
 
 class CardAdapter(
-    private var list: MutableList<Card>
+    private var list: MutableList<Card>,
+    private var listener: RecyclerViewClickListener
 ) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
 
     inner class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
@@ -35,9 +37,8 @@ class CardAdapter(
         }
 
         override fun onClick(v: View?) {
-            if(Global.pos1 == -1) Global.pos1 = Integer.parseInt(numberTextView.text.toString())
-            else if(Global.pos2 == -1) Global.pos2 = Integer.parseInt(numberTextView.text.toString())
-            else return
+            listener.onClick(v!!, adapterPosition)
+
         }
     }
 

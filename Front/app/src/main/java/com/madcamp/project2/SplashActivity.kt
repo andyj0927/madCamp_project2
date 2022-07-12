@@ -29,7 +29,7 @@ import java.io.IOException
 
 class SplashActivity : AppCompatActivity() {
     private val TAG = this::class.java.simpleName
-    private val duration: Long = 5000
+    private val duration: Long = 4000
     lateinit var logo: ImageView
     lateinit var splashImg: ImageView
     lateinit var lottie: LottieAnimationView
@@ -38,14 +38,16 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        Global.socket = IO.socket(Global.WS_BASE_URL)
+
         logo = findViewById(R.id.splashlogo)
         splashImg= findViewById(R.id.splashimg)
         lottie=findViewById(R.id.lottie)
 
-        Global.socket = IO.socket(Global.WS_BASE_URL)
-        splashImg.animate().translationY((-2500).toFloat()).setDuration(1000).setStartDelay(3000)
-        logo.animate().translationY((2000).toFloat()).setDuration(1000).setStartDelay(3000)
-        lottie.animate().translationY((1400).toFloat()).setDuration(1000).setStartDelay(3000)
+        splashImg.animate().translationY((-4000).toFloat()).setDuration(1000).startDelay = 3000
+        logo.animate().translationY((2000).toFloat()).setDuration(1000).startDelay = 3000
+        lottie.animate().translationY((2000).toFloat()).setDuration(1000).startDelay = 3000
+
         initGSO()
         initHeaders()
         initCurrentUser()
