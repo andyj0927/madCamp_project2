@@ -1,6 +1,5 @@
 package com.madcamp.project2.Service
 
-import com.madcamp.project2.Data.Jwt
 import com.madcamp.project2.Data.JwtRequest
 import com.madcamp.project2.Data.ResponseType
 import retrofit2.Call

@@ -30,11 +30,4 @@ object PreferenceManager {
         edit.remove(key)
         edit.commit()
     }
-
-    fun clear(context: Context) {
-        val prefs: SharedPreferences = getPreferences(context)
-        val edit: SharedPreferences.Editor = prefs.edit()
-        edit.clear()
-        edit.commit()
-    }
 }

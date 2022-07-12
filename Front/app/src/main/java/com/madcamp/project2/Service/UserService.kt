@@ -31,18 +31,6 @@ interface UserService {
         @Path("id") id: Int
     ): Call<ResponseType<User>>
 
-    @POST("auth/google/login")
-    fun getGoogleLogin(
-        @HeaderMap headers: Map<String, String>,
-        @Body body: GoogleRequest
-    ): Call<ResponseType<Int>>
-
-    @POST("auth/google/interlock")
-    fun interlockBetweenLocalAndGoogle(
-        @HeaderMap headers: Map<String, String>,
-        @Body body: GoogleRequest
-    ): Call<ResponseType<Unit>>
-
     @POST("auth/token")
     fun getUserByToken(
         @HeaderMap headers: Map<String, String>

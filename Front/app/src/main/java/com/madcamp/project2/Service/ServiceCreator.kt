@@ -1,8 +1,6 @@
 package com.madcamp.project2.Service
 
-import com.madcamp.project2.Global
 import okhttp3.*
-import java.io.IOException;
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -20,5 +18,4 @@ object ServiceCreator {
 
     val userService: UserService = retrofit.create(UserService::class.java)
     val jwtService: JwtService = retrofit.create(JwtService::class.java)
-    val gameService: GameService = retrofit.create(GameService::class.java)
 }

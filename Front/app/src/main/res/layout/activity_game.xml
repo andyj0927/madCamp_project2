@@ -6,7 +6,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#50744E"
+        >
 
         <LinearLayout
             android:id="@+id/inGameTopLayout"
@@ -80,9 +82,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/inGameTopLayout"
-            android:background="#50744E"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
     </RelativeLayout>
 
 
