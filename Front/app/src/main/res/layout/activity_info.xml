@@ -137,43 +137,11 @@
                 />
         </GridLayout>
 
-        <LinearLayout
-            android:id="@+id/linkgoogle"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_below="@id/gameGridLayout"
-            >
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="Google 연동"
-                />
-
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/googleSignInButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                />
-
-            <TextView
-                android:id="@+id/completeGoogleSignInTextView"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:text="연동 중"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-
         <Button
             android:id="@+id/toBattle"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_below="@id/linkgoogle"
+            android:layout_below="@id/gameGridLayout"
             android:text="대결하기"
             android:backgroundTint="@color/black"
             />

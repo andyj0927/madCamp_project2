@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.madcamp.project2.Data.*
 import com.madcamp.project2.Global
 import com.madcamp.project2.Home.MainActivity
@@ -46,18 +44,6 @@ class LoginActivity : AppCompatActivity() {
 
             localLogin(userName, password)
         }
-        // -------------------------------------------------------------------------------------------------------
-        binding.googleSignInButton.setOnClickListener{
-            val account: GoogleSignInAccount? = GoogleSignIn.getLastSignedInAccount(this@LoginActivity)
-            if(account == null || account.idToken == null) {
-                val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
-                startActivity(intent)
-            }
-
-            else {
-                googleLogin(account.idToken!!)
-            }
-        }
 
         binding.registerButton.setOnClickListener{
             val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
@@ -71,14 +57,6 @@ class LoginActivity : AppCompatActivity() {
             ServiceCreator.userService.postLogin(UserLoginRequest(userName, password))
 
         Log.d(TAG, "local Login is Executed")
-        login(call)
-    }
-
-    private fun googleLogin(idToken: String) {
-        val call: Call<ResponseType<Int>> =
-            ServiceCreator.userService.getGoogleLogin(Global.headers, GoogleRequest(idToken))
-
-        Log.d(TAG, "google Login is Executed")
         login(call)
     }
 
