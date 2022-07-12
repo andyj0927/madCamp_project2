@@ -1,5 +1,7 @@
 package com.madcamp.project2.Game
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,10 +12,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.madcamp.project2.Data.Card
+import com.madcamp.project2.Data.ResponseType
+import com.madcamp.project2.Data.User
 import com.madcamp.project2.Global
+import com.madcamp.project2.Home.MainActivity
 import com.madcamp.project2.Home.RecyclerViewClickListener
+import com.madcamp.project2.R
+import com.madcamp.project2.Service.ServiceCreator
 import com.madcamp.project2.databinding.ActivityGameBinding
 import kotlinx.coroutines.*
+import java.io.IOException
 
 class GameActivity: AppCompatActivity() {
     private val TAG: String = this.javaClass.simpleName
@@ -38,6 +46,7 @@ class GameActivity: AppCompatActivity() {
 
         initVars()
         initBinding()
+        initViews()
         initExtras()
         initListener()
         initSocket()
@@ -70,6 +79,14 @@ class GameActivity: AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    private fun initViews() {
+        binding.ChallengerScore.text = "0"
+        binding.DefenderScore.text = "0"
+
+        binding.ChallengerText.setBackgroundResource(R.drawable.black_border)
+        binding.DefenderText.setBackgroundResource(R.drawable.red_border)
+    }
+
     private fun initExtras() {
         c_id = intent.getIntExtra("c_id", -1)
         d_id = intent.getIntExtra("d_id", -1)
@@ -89,11 +106,19 @@ class GameActivity: AppCompatActivity() {
 
 
                 if(pos2 != -1 && (list[pos1].num != list[pos2].num)) {
-                    myTurn = false
-                    flipBack(pos1, pos2)
+                    val handler = Handler(Looper.getMainLooper())
+                    handler.postDelayed({
+                        myTurn = false
+                        flipBack()
+                    }, 1000)
 
-                    pos1 = -1
-                    pos2 = -1
+                    if(Global.currentUserId == d_id) {
+                        binding.ChallengerText.setBackgroundResource(R.drawable.red_border)
+                        binding.DefenderText.setBackgroundResource(R.drawable.black_border)
+                    } else {
+                        binding.ChallengerText.setBackgroundResource(R.drawable.black_border)
+                        binding.DefenderText.setBackgroundResource(R.drawable.red_border)
+                    }
                 }
 
                 if(pos2 != -1 && (list[pos1].num == list[pos2].num)) {
@@ -102,15 +127,24 @@ class GameActivity: AppCompatActivity() {
                     pos2 = -1
 
                     ++pair
-                    if(Global.currentUserId == c_id) ++c_score
-                    else ++d_score
+                    if(Global.currentUserId == c_id) {
+                        ++c_score
+                        binding.ChallengerScore.text = c_score.toString()
+                    }
+                    else {
+                        ++d_score
+                        binding.DefenderScore.text = d_score.toString()
+                    }
 
                     if(pair == 8) {
                         var cIsWin = 0
                         if(c_score > d_score) cIsWin = 1
                         if(c_score < d_score) cIsWin = -1
                         if(c_score == d_score) cIsWin = 0
+
                         Global.socket?.emit("GameSet", c_id, d_id, cIsWin)
+
+                        showModal()
                     }
                 }
             }
@@ -147,11 +181,40 @@ class GameActivity: AppCompatActivity() {
             val pos = it!![0] as Int
 
             flipCard(pos)
+
+            val handler = Handler(Looper.getMainLooper())
             if(pos2 != -1 && (list[pos1].num != list[pos2].num)) {
                 myTurn = true
-                flipBack(pos1, pos2)
+                handler.postDelayed({
+                        flipBack()
+                }, 1000)
+
+                if(Global.currentUserId == c_id) {
+                    binding.ChallengerText.setBackgroundResource(R.drawable.red_border)
+                    binding.DefenderText.setBackgroundResource(R.drawable.black_border)
+                } else {
+                    binding.ChallengerText.setBackgroundResource(R.drawable.black_border)
+                    binding.DefenderText.setBackgroundResource(R.drawable.red_border)
+                }
+            }
+
+            if(pos2 != -1 && (list[pos1].num == list[pos2].num)) {
+                myTurn = false
                 pos1 = -1
                 pos2 = -1
+                ++pair
+                if(Global.currentUserId == c_id) {
+                    ++d_score
+                    binding.DefenderScore.text = d_score.toString()
+                }
+                else {
+                    ++c_score
+                    binding.ChallengerScore.text = c_score.toString()
+                }
+
+                if(pair == 8) {
+                    showModal()
+                }
             }
         }
     }
@@ -169,7 +232,7 @@ class GameActivity: AppCompatActivity() {
         }, 0)
     }
 
-    private fun flipBack(pos1: Int, pos2: Int) {
+    private fun flipBack() {
         list[pos1].status = false
         list[pos2].status = false
 
@@ -178,6 +241,9 @@ class GameActivity: AppCompatActivity() {
         handler.postDelayed({
             cardAdapter.notifyItemChanged(pos1)
             cardAdapter.notifyItemChanged(pos2)
+
+            pos1 = -1
+            pos2 = -1
         }, 0)
     }
 
@@ -221,5 +287,36 @@ class GameActivity: AppCompatActivity() {
         }, 0)
     }
 
+    private fun showModal() {
+        val alertDialogBuilder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(this)
+        }
+
+        alertDialogBuilder.setTitle("Game Set")
+        val result = if(c_score > d_score) {
+            "Challenger Win!!"
+        } else if (c_score < d_score) {
+            "Defender Win!!"
+        } else {
+            "Draw"
+        }
+
+        alertDialogBuilder.setMessage("Challenger's score: $c_score \nDefender's score: ${d_score}\n ${result}")
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            alertDialogBuilder.apply {
+                setPositiveButton("나가기") { dialog, id ->
+                    try {
+                        Log.d(TAG, "Game set")
+                        val intent = Intent(this@GameActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }.create()?.show()
+        }, 0)
+    }
 
 }
