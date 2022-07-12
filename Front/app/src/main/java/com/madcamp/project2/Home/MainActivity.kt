@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,8 +31,9 @@ class MainActivity : AppCompatActivity() {
     private val TAG = this::class.java.simpleName
     lateinit var list: MutableList<User>
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
-    lateinit var testTextView: TextView
+    lateinit var ImgView: ImageView
     lateinit var recview: RecyclerView
+    lateinit var Develop: TextView
     lateinit var listener: RecyclerViewClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +49,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         recview = findViewById(R.id.rc_view)
-        testTextView = findViewById(R.id.testTextView)
+        ImgView = findViewById(R.id.ImageView)
+        Develop = findViewById(R.id.develop)
     }
 
     private fun initRefresh() {
@@ -109,11 +112,12 @@ class MainActivity : AppCompatActivity() {
                     recview.layoutManager = manager
 
                     recview.visibility = View.VISIBLE
-                    testTextView.visibility = View.GONE
+                    ImgView.visibility = View.GONE
+                    Develop.visibility = View.GONE
                 }
                 else if(response.code() == 101) {
                     Global.currentUserId = null
-                    testTextView.visibility = View.VISIBLE
+                    ImgView.visibility = View.VISIBLE
                     recview.visibility = View.GONE
                 }
                 else if(response.code() == 500) {

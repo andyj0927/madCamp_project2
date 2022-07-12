@@ -30,15 +30,23 @@
             android:visibility="gone"
             />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-    <TextView
-        android:id="@+id/testTextView"
+    <ImageView
+        android:id="@+id/ImageView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="로그인 전 페이지"
-        android:gravity="center"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toBottomOf="@id/top_fragment"
+        android:src="@drawable/logo"
+        android:gravity="center"
+        />
+    <TextView
+        android:id="@+id/develop"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:gravity="center"
+        android:textSize="15dp"
+        android:text="Developer : 이성진, 정영훈"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
