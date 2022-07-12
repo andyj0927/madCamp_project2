@@ -1,10 +1,11 @@
 package com.madcamp.project2.Home
 
-import android.content.Context
+import android.app.AlertDialog
 import android.content.Intent
-import android.icu.text.IDNA
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -15,11 +16,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.madcamp.project2.Auth.InfoActivity
 import com.madcamp.project2.Data.ResponseType
 import com.madcamp.project2.Data.User
+import com.madcamp.project2.Game.GameActivity
 import com.madcamp.project2.Global
 import com.madcamp.project2.R
 import com.madcamp.project2.Service.ServiceCreator
-import io.socket.client.IO
-import io.socket.client.Socket
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         list = mutableListOf()
-        Global.initSocket(this@MainActivity)
+        initDualReceive()
         initViews()
         initRecyclerViewListener()
         initRefresh()
@@ -129,7 +129,50 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun getContext(): Context {
-        return this.getContext()
+    private fun initDualReceive(){
+        Global.socket?.on("Dual receive") { args ->
+            val c_id: Int = args[0] as Int
+            Log.d("Game received", "from ${c_id}")
+            gameReceive(c_id)
+        }
+    }
+
+    private fun gameReceive(c_id: Int) {
+        val alertDialogBuilder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(this)
+        }
+
+        alertDialogBuilder.setMessage("게임을 수락하시겠습니까?")
+            ?.setTitle("게임 신청을 받았습니다.")
+
+
+        if(! this.isFinishing) {
+            val handler = Handler(Looper.getMainLooper())
+            handler.postDelayed({
+                alertDialogBuilder.apply {
+                    setPositiveButton("네") { dialog, id ->
+                        try {
+                            Log.d(TAG, "Yes!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+                            Global.socket?.emit("dual accept", c_id, Global.currentUserId)
+                            val intent = Intent(this@MainActivity, GameActivity::class.java)
+                            intent.putExtra("c_id", c_id)
+                                .putExtra("d_id", Global.currentUserId)
+                            startActivity(intent)
+                            Log.d(TAG, "PERFECT???????????????????????????????")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    setNegativeButton("아니요") { dialog, id ->
+                        try {
+                            Global.socket?.emit("dual false")
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                }.create()?.show()
+            }, 0)
+        }
     }
 }

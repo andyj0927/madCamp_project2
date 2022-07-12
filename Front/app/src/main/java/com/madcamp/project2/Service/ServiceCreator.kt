@@ -20,4 +20,5 @@ object ServiceCreator {
 
     val userService: UserService = retrofit.create(UserService::class.java)
     val jwtService: JwtService = retrofit.create(JwtService::class.java)
+    val gameService: GameService = retrofit.create(GameService::class.java)
 }
