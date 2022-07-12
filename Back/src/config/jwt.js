@@ -1,9 +1,9 @@
 module.exports = {
-	'secret': 'ThisIsASecretCode',
+	secret: "ThisIsASecretCode",
 	option: {
-		algorithm: 'HS256',
-		expiresIn: '7d',
-		issuer: 'issuer'
+		algorithm: "HS256",
+		expiresIn: "7d",
+		issuer: "issuer"
 	},
-	googleKey: 'AIzaSyCA1aHRhpMejVKspqQAW63HRqNIFrfyMAA'
+	googleKey: "AIzaSyCA1aHRhpMejVKspqQAW63HRqNIFrfyMAA"
 }
